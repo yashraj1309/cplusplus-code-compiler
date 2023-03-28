@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>C++ Code Compiler</title>
+	<style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+		body {
+			font-family: sans-serif;
+			margin: 0;
+			padding: 1rem;
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+		}
+		#editor {
+            box-sizing: border-box;
+			height: 300px;
+			width: 100%;
+            padding: 1rem;
+		}
+		#output {
+			height: 300px;
+			width: 100%;
+			background-color: #f7f7f7;
+			overflow: auto;
+			padding: 10px;
+			box-sizing: border-box;
+            padding: 1rem;
+		}
+		.btn {
+			background-color: #4CAF50;
+			border: none;
+			color: white;
+			padding: 10px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			margin: 4px 2px;
+			cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<h1>C++ Code Compiler</h1>
+		<textarea id="editor" placeholder="Enter your C++ code here"></textarea>
+		<br>
+		<button class="btn" onclick="compileCode()">Compile Code</button>
+		<button class="btn" onclick="clearOutput()">Clear Output</button>
+	</div>
+	<div>
+		<h2>Output:</h2>
+		<div id="output"></div>
+	</div>
+	<script>
+		function compileCode() {
+			var code = document.getElementById("editor").value;
+			var output = document.getElementById("output");
+			output.innerHTML = "Compiling...";
+			var options = {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+					'X-RapidAPI-Key': 'eb31a0e555msha5baa5175d99932p1f5a85jsna18c063b3625',
+					'X-RapidAPI-Host': 'cpp-code-compiler.p.rapidapi.com'
+				},
+				body: JSON.stringify({code: code, version: "latest"})
+			};
+			fetch('https://cpp-code-compiler.p.rapidapi.com/', options)
+				.then(response => response.json())
+				.then(result => {
+					if (result.errors) {
+						output.innerHTML = result.errors.join("<br>");
+					} else {
+						output.innerHTML = result.output;
+                        console.log(result);
+					}
+				})
+				.catch(error => {
+					output.innerHTML = "Error: " + error;
+				});
+		}
+
+		function clearOutput() {
+			document.getElementById("output").innerHTML = "";
+		}
+	</script>
+</body>
+</html>
